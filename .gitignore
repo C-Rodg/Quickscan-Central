@@ -1,0 +1,11 @@
+# Node Modules
+node_modules
+
+# Output
+dist/
+
+# Builds
+builds/
+
+# Secrets
+container/upload-config.js
