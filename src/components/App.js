@@ -5,6 +5,12 @@ import AlertContainer from "react-alert";
 
 // Components & Styles
 import "../styles/default.css";
+import Title from "./Title";
+import Home from "./Home";
+import Login from "./Login";
+import Manage from "./Manage";
+import Clear from "./Clear";
+import Edit from "./Edit";
 import { alertOptions, shortAlert } from "../utils/alertOptions";
 
 // Services
@@ -49,9 +55,30 @@ class App extends Component {
 		return (
 			<div className="app">
 				<AlertContainer ref={a => (this.msg = a)} {...alertOptions} />
-
-				<main />
+				<Title />
+				<main>
+					<Route
+						path="/"
+						exact
+						render={props => {
+							return <Home {...props} />;
+						}}
+					/>
+					<Route
+						path="/manage"
+						exact
+						render={props => {
+							return !this.state.isAuthenticated ? (
+								<Manage {...props} />
+							) : (
+								<Login {...props} onAuthenticate={this.authenticate} />
+							);
+						}}
+					/>
+				</main>
 			</div>
 		);
 	}
 }
+
+export default App;
