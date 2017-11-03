@@ -56,6 +56,8 @@ main {
 	position: relative;
 	margin: 0 15px 30px 15px;
 	color: rgba(0, 0, 0, 0.87);
+	flex: 1 1 300px;
+	padding: 15px;
 }
 
 .card .card-title {
@@ -73,13 +75,10 @@ main {
 	padding-right: 10px;
 }
 
-.upload-action-button {
-	background-color: #578c88;
-	transition: background-color 0.3s ease;
+.action-button {
 	font-weight: 500;
 	color: #fff;
 	border-radius: 45px;
-	border: 5px solid #6ea9a2;
 	padding: 10px 25px;
 	font-size: 1.5rem;
 	letter-spacing: 0.08em;
@@ -87,8 +86,24 @@ main {
 	user-select: none;
 }
 
+.upload-action-button {
+	background-color: #578c88;
+	transition: background-color 0.3s ease;
+	border: 5px solid #6ea9a2;
+}
+
 .upload-action-button:hover {
 	background-color: #6ea9a2;
+}
+
+.clear-action-button {
+	background-color: #e45f51;
+	transition: background-color 0.3s ease;
+	border: 5px solid #f18a7d;
+}
+
+.clear-action-button:hover {
+	background-color: #f18a7d;
 }
 
 .center-flex {
