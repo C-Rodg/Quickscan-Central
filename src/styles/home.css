@@ -1,2 +1,13 @@
-.home {
+.home .guide-text {
+	text-align: center;
+	font-size: 1.1rem;
+}
+
+.home.container {
+	flex-direction: column;
+}
+
+.home .home-button-container {
+	display: flex;
+	flex: 1;
 }

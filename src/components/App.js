@@ -11,6 +11,7 @@ import Login from "./Login";
 import Manage from "./Manage";
 import Clear from "./Clear";
 import Edit from "./Edit";
+import Upload from "./Upload";
 import { alertOptions, shortAlert } from "../utils/alertOptions";
 
 // Services
@@ -52,6 +53,7 @@ class App extends Component {
 	};
 
 	render() {
+		console.log(this.state);
 		return (
 			<div className="app">
 				<AlertContainer ref={a => (this.msg = a)} {...alertOptions} />
@@ -64,15 +66,40 @@ class App extends Component {
 							return <Home {...props} />;
 						}}
 					/>
+
+					<Route
+						path="/upload"
+						exact
+						render={props => {
+							return <Upload {...props} />;
+						}}
+					/>
+
 					<Route
 						path="/manage"
 						exact
 						render={props => {
-							return !this.state.isAuthenticated ? (
+							return this.state.isAuthenticated ? (
 								<Manage {...props} />
 							) : (
 								<Login {...props} onAuthenticate={this.authenticate} />
 							);
+						}}
+					/>
+
+					<Route
+						path="/manage/edit"
+						exact
+						render={props => {
+							return <Edit {...props} />;
+						}}
+					/>
+
+					<Route
+						path="/manage/clear"
+						exact
+						render={props => {
+							return <Clear {...props} />;
 						}}
 					/>
 				</main>

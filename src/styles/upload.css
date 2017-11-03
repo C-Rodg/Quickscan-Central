@@ -1,0 +1,14 @@
+.upload.container {
+	flex-direction: column;
+}
+
+.upload .row {
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
+}
+
+.upload .card {
+	flex: 1 1 300px;
+	padding: 15px;
+}
