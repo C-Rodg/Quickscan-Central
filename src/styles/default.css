@@ -1,5 +1,5 @@
 @import "./material-design-icons/material-icons.css";
-@import "./roboto/roboto.css";
+@import "./raleway/raleway.css";
 
 a {
 	color: inherit;
@@ -13,7 +13,7 @@ html {
 body {
 	margin: 0;
 	min-height: 100%;
-	font-family: "Roboto", "Helvetica", "Arial", "sans-serif";
+	font-family: "Raleway", "Helvetica", "Arial", "sans-serif";
 	display: flex;
 	flex-direction: column;
 }
