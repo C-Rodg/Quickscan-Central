@@ -2,3 +2,42 @@
 	flex-direction: column;
 	align-items: center;
 }
+
+.clear .center-section {
+	margin-top: 8px;
+	margin-bottom: 8px;
+}
+
+.mod-time {
+	display: inline-block;
+	line-height: 1;
+	border: 1px solid #e7e7e7;
+	border-radius: 8px;
+	margin-top: 4px;
+}
+
+.mod-time .time-action {
+	transition: background-color 0.3s ease;
+	color: rgba(0, 0, 0, 0.67);
+	cursor: pointer;
+	padding: 8px 10px;
+	display: inline-block;
+	user-select: none;
+	min-width: 85px;
+	text-align: center;
+}
+
+.mod-time .time-action:hover {
+	background-color: #e7e7e7;
+}
+
+.mod-time .time-action:first-child {
+	border-right: 1px solid #e7e7e7;
+	border-top-left-radius: 8px;
+	border-bottom-left-radius: 8px;
+}
+
+.mod-time .time-action:last-child {
+	border-top-right-radius: 8px;
+	border-bottom-right-radius: 8px;
+}
