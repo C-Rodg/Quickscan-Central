@@ -14,8 +14,6 @@ const Chart = ({ title, data }) => {
 				{data.map((point, idx) => {
 					const rectY = idx * 35;
 					const width = point.percent * 1.85;
-					// console.log(rectY);
-					// console.log(width);
 					return (
 						<g className="bar" key={point.id}>
 							<rect width={width} height="29" y={rectY} rx="2" ry="2" />

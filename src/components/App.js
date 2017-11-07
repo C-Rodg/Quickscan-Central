@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import { Route, Redirect } from "react-router-dom";
 import AlertContainer from "react-alert";
 import { withRouter } from "react-router";
+import moment from "moment";
 
 // Components & Styles
 import "../styles/default.css";
@@ -14,6 +15,11 @@ import Clear from "./Clear";
 import Edit from "./Edit";
 import Upload from "./Upload";
 import { alertOptions, shortAlert } from "../utils/alertOptions";
+import {
+	getClockDrift,
+	quickDateFormat,
+	displayDateFormat
+} from "../utils/dateFormats";
 
 // Services
 import { getDevice } from "../services/container-services";
@@ -23,7 +29,8 @@ class App extends Component {
 		isAuthenticated: false,
 		deviceTime: {},
 		deviceInfo: {},
-		barcodes: []
+		barcodes: [],
+		extraInfo: {}
 	};
 
 	// Get device info for selected routes
@@ -46,7 +53,8 @@ class App extends Component {
 			currentDevice: null,
 			deviceTime: {},
 			deviceInfo: {},
-			barcodes: []
+			barcodes: [],
+			extraInfo: {}
 		});
 	};
 
@@ -97,10 +105,13 @@ class App extends Component {
 		getDevice()
 			.then(data => {
 				const { barcodes, info, time } = data;
+				const extraInfo = this.calculateExtraInfo(data);
+				console.log(data);
 				this.setState({
 					barcodes,
 					deviceTime: time,
-					deviceInfo: info
+					deviceInfo: info,
+					extraInfo
 				});
 			})
 			.catch(err => {
@@ -110,6 +121,55 @@ class App extends Component {
 					message: err.message
 				});
 			});
+	};
+
+	// Calculate extra info
+	calculateExtraInfo = data => {
+		const calculatedClockDrift = data.time.clockDrift
+			? getClockDrift(data.time.clockDrift)
+			: "-Unknown Device Time";
+		let uniqueScans = new Set(),
+			uniqueSessions = new Set(),
+			firstScan = "",
+			lastScan = "",
+			totalScans = 0,
+			displayDeviceTime = "",
+			displayCurrentTime = "";
+		if (data.barcodes && data.barcodes.length > 0) {
+			totalScans = data.barcodes.length;
+			data.barcodes.forEach(code => {
+				uniqueScans.add(code.data);
+				if (code.data && code.data.indexOf("-SC-") > -1) {
+					uniqueSessions.add(code.data);
+				}
+			});
+			firstScan = moment(data.barcodes[0].time, quickDateFormat).format(
+				displayDateFormat
+			);
+			lastScan = moment(
+				data.barcodes[data.barcodes.length - 1].time,
+				quickDateFormat
+			).format(displayDateFormat);
+		}
+		if (data.time) {
+			displayCurrentTime = moment(
+				data.time.currentTime,
+				quickDateFormat
+			).format(displayDateFormat);
+			displayDeviceTime = moment(data.time.deviceTime, quickDateFormat).format(
+				displayDateFormat
+			);
+		}
+		return {
+			calculatedClockDrift,
+			sessionScans: uniqueSessions,
+			firstScan,
+			lastScan,
+			uniqueScans,
+			totalScans,
+			displayCurrentTime,
+			displayDeviceTime
+		};
 	};
 
 	render() {
@@ -130,7 +190,14 @@ class App extends Component {
 						path="/upload"
 						exact
 						render={props => {
-							return <Upload {...props} onUpload={this.uploadDevice} />;
+							return (
+								<Upload
+									{...props}
+									onUpload={this.uploadDevice}
+									extraInfo={this.state.extraInfo}
+									deviceInfo={this.state.deviceInfo}
+								/>
+							);
 						}}
 					/>
 
