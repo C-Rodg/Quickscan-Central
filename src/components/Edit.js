@@ -84,6 +84,7 @@ class Edit extends Component {
 					isScanCode={isScanCode}
 					openActionButtons={this.openActionButtons}
 					isOpen={isOpen}
+					onActionClick={this.handleActionClick}
 				/>
 			);
 		});

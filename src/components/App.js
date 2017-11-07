@@ -19,9 +19,6 @@ import { alertOptions, shortAlert } from "../utils/alertOptions";
 class App extends Component {
 	state = {
 		isAuthenticated: false,
-
-		currentDevice: null,
-		deviceList: [],
 		deviceTime: {},
 		deviceInfo: {},
 		barcodes: []

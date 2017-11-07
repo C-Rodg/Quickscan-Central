@@ -10,7 +10,7 @@ const url = require("url");
 let mainWindow;
 
 // Electron Container Application Services
-//const services = require("./container/backend-services");
+const services = require("./container/backend-services");
 
 if (
 	process.defaultApp ||
