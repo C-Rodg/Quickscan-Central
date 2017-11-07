@@ -2,12 +2,23 @@ import React, { Component } from "react";
 import moment from "moment";
 
 import "../styles/edit.css";
-import { quickDateFormat, addDateFormat } from "../utils/dateFormats";
+import {
+	quickDateFormat,
+	addDateFormat,
+	displayDateFormat
+} from "../utils/dateFormats";
 import HomeButton from "./HomeButton";
 import Chart from "./Chart";
 import ScanListItem from "./ScanListItem";
 
 class Edit extends Component {
+	state = {
+		isShowingDeletePortal: false,
+		isShowingAddPortal: false,
+		editPosition: null,
+		openPosition: null
+	};
+
 	// Get Scan Count header
 	renderScanCount() {
 		if (this.props.barcodes.length === 0) {
@@ -29,15 +40,50 @@ class Edit extends Component {
 		);
 	}
 
+	// Open/Close Action Buttons
+	openActionButtons = idx => {
+		console.log("opening..");
+		if (this.state.openPosition === idx) {
+			this.setState({ openPosition: null });
+		} else {
+			this.setState({ openPosition: idx });
+		}
+	};
+
+	// Handle Action Button Click
+	handleActionClick = (isAdding, idx) => {
+		if (isAdding) {
+			this.setState({
+				isShowingAddPortal: true,
+				editPosition: idx,
+				openPosition: null
+			});
+		} else {
+			this.setState({
+				isShowingDeletePortal: true,
+				editPosition: idx,
+				openPosition: null
+			});
+		}
+	};
+
 	// Get Scan List items
 	renderScanList() {
 		return this.props.barcodes.map((code, idx) => {
+			const isScanCode = code.data.indexOf("-SC-") > -1 ? true : false;
+			const displayTime = moment(code.time, quickDateFormat).format(
+				displayDateFormat
+			);
+			const isOpen = this.state.openPosition === idx ? true : false;
 			return (
 				<ScanListItem
 					key={code.time + code.data}
 					idx={idx}
 					scanId={code.data}
-					scanTime={code.time}
+					scanTime={displayTime}
+					isScanCode={isScanCode}
+					openActionButtons={this.openActionButtons}
+					isOpen={isOpen}
 				/>
 			);
 		});
