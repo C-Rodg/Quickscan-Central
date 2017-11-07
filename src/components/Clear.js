@@ -66,22 +66,27 @@ class Clear extends Component {
 							<div className="card-row mod-time">
 								<span
 									className="time-action"
-									onClick={() => this.modifyTime(true)}
+									onClick={() => this.modifyTime(false)}
 								>
-									+1 Hour
+									- 1 Hour
 								</span>
 								<span
 									className="time-action"
-									onClick={() => this.modifyTime(false)}
+									onClick={() => this.modifyTime(true)}
 								>
-									-1 Hour
+									+ 1 Hour
 								</span>
 							</div>
 						</div>
 					</div>
 				</div>
 				<div className="row">
-					<div className="action-button clear-action-button">Clear Device</div>
+					<div
+						className="action-button clear-action-button"
+						onClick={() => this.props.onClear(this.state.currentDate)}
+					>
+						Clear Device
+					</div>
 				</div>
 				<HomeButton />
 			</div>

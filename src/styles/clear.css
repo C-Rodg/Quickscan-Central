@@ -4,8 +4,8 @@
 }
 
 .clear .center-section {
-	margin-top: 8px;
-	margin-bottom: 8px;
+	margin-top: 13px;
+	margin-bottom: 13px;
 }
 
 .mod-time {
@@ -40,4 +40,12 @@
 .mod-time .time-action:last-child {
 	border-top-right-radius: 8px;
 	border-bottom-right-radius: 8px;
+}
+
+.center-section .card-row {
+	line-height: 1.75;
+}
+
+.center-section .card-row.mod-time {
+	line-height: 1.25;
 }

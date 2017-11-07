@@ -47,6 +47,16 @@ class App extends Component {
 		this.setState({ isAuthenticated: false });
 	};
 
+	// Clear Device Confirmed
+	clearDevice = resetTime => {
+		console.log("New reset time is: " + resetTime);
+		this.handleNotification({
+			message: "Device initialized!",
+			isShort: false,
+			type: "success"
+		});
+	};
+
 	// Notification system
 	handleNotification = msgObj => {
 		this.msg[msgObj.type](msgObj.message, msgObj.isShort ? shortAlert : {});
@@ -99,7 +109,7 @@ class App extends Component {
 						path="/manage/clear"
 						exact
 						render={props => {
-							return <Clear {...props} />;
+							return <Clear {...props} onClear={this.clearDevice} />;
 						}}
 					/>
 				</main>
