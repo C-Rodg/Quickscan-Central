@@ -49,9 +49,26 @@ class App extends Component {
 
 	// Clear Device Confirmed
 	clearDevice = resetTime => {
-		console.log("New reset time is: " + resetTime);
+		const timeTuple = [
+			resetTime.second(),
+			resetTime.minute(),
+			resetTime.hour(),
+			resetTime.date(),
+			resetTime.month() + 1,
+			resetTime.year() - 2000
+		];
+		console.log(timeTuple);
 		this.handleNotification({
 			message: "Device initialized!",
+			isShort: false,
+			type: "success"
+		});
+	};
+
+	// Upload Device
+	uploadDevice = () => {
+		this.handleNotification({
+			message: "Successfully uploaded device!",
 			isShort: false,
 			type: "success"
 		});
@@ -81,7 +98,7 @@ class App extends Component {
 						path="/upload"
 						exact
 						render={props => {
-							return <Upload {...props} />;
+							return <Upload {...props} onUpload={this.uploadDevice} />;
 						}}
 					/>
 
@@ -101,7 +118,13 @@ class App extends Component {
 						path="/manage/edit"
 						exact
 						render={props => {
-							return <Edit {...props} />;
+							return (
+								<Edit
+									{...props}
+									onUpload={this.uploadDevice}
+									barcodes={this.state.barcodes}
+								/>
+							);
 						}}
 					/>
 

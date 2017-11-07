@@ -1,12 +1,109 @@
 import React, { Component } from "react";
+import moment from "moment";
 
+import "../styles/edit.css";
+import { quickDateFormat, addDateFormat } from "../utils/dateFormats";
 import HomeButton from "./HomeButton";
+import Chart from "./Chart";
+import ScanListItem from "./ScanListItem";
 
 class Edit extends Component {
+	// Get Scan Count header
+	renderScanCount() {
+		if (this.props.barcodes.length === 0) {
+			return (
+				<div className="no-scan-content scan-count">
+					No Scans...<i className="material-icons scans-add">
+						add_circle_outline
+					</i>
+				</div>
+			);
+		}
+
+		return (
+			<div className="scan-count">
+				{this.props.barcodes.length}{" "}
+				{this.props.barcodes.length !== 1 ? "Scans" : "Scan"}{" "}
+				<i className="material-icons scans-add">add_circle_outline</i>
+			</div>
+		);
+	}
+
+	// Get Scan List items
+	renderScanList() {
+		return this.props.barcodes.map((code, idx) => {
+			return (
+				<ScanListItem
+					key={code.time + code.data}
+					idx={idx}
+					scanId={code.data}
+					scanTime={code.time}
+				/>
+			);
+		});
+	}
+
+	// Display the scan chart
+	renderScanChart() {
+		const codesObject = {};
+		this.props.barcodes.forEach(code => {
+			const d = moment(code.time, quickDateFormat).format("YYYY-MM-DDTHH");
+			if (codesObject.hasOwnProperty(d)) {
+				codesObject[d] += 1;
+			} else {
+				codesObject[d] = 1;
+			}
+		});
+		const barcodeData = Object.keys(codesObject)
+			.map(k => {
+				return {
+					id: k,
+					total: codesObject[k],
+					time: moment(k, "YYYY-MM-DDTHH").format("h:00 a, MMM Do"),
+					percent: Math.floor(codesObject[k] / this.props.barcodes * 100)
+				};
+			})
+			.sort((a, b) => {
+				if (
+					moment(a.id, "YYYY-MM-DDTHH").isBefore(moment(b.id, "YYYY-MM-DDTHH"))
+				) {
+					return -1;
+				} else if (
+					moment(a.id, "YYYY-MM-DDTHH").isAfter(moment(b.id, "YYYY-MM-DDTHH"))
+				) {
+					return 1;
+				} else {
+					return 0;
+				}
+			});
+		return <Chart title="Scan Title Summary" data={barcodeData} />;
+	}
+
+	// Get Scan Data and chart
+	renderScanContent() {
+		return (
+			<div className="data-container">
+				<div className="data-scans">{this.renderScanList()}</div>
+				<div className="data-chart">{this.renderScanChart()}</div>
+			</div>
+		);
+	}
+
 	render() {
 		return (
 			<div className="edit container">
-				Editting here with link to initialize device!
+				<div className="row count-container">{this.renderScanCount()}</div>
+				<div className="row">
+					{this.props.barcodes.length > 0 && this.renderScanContent()}
+				</div>
+				<div className="row">
+					<div
+						className="action-button upload-action-button"
+						onClick={this.props.onUpload}
+					>
+						Upload Now!
+					</div>
+				</div>
 				<HomeButton />
 			</div>
 		);

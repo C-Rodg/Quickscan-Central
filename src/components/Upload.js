@@ -53,7 +53,12 @@ class Upload extends Component {
 					</div>
 				</div>
 				<div className="row">
-					<div className="action-button upload-action-button">Upload Now!</div>
+					<div
+						className="action-button upload-action-button"
+						onClick={this.props.onUpload}
+					>
+						Upload Now!
+					</div>
 				</div>
 				<HomeButton />
 			</div>
