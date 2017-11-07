@@ -2,6 +2,7 @@
 import React, { Component } from "react";
 import { Route, Redirect } from "react-router-dom";
 import AlertContainer from "react-alert";
+import { withRouter } from "react-router";
 
 // Components & Styles
 import "../styles/default.css";
@@ -15,6 +16,7 @@ import Upload from "./Upload";
 import { alertOptions, shortAlert } from "../utils/alertOptions";
 
 // Services
+import { getDevice } from "../services/container-services";
 
 class App extends Component {
 	state = {
@@ -23,6 +25,20 @@ class App extends Component {
 		deviceInfo: {},
 		barcodes: []
 	};
+
+	// Get device info for selected routes
+	componentWillReceiveProps(nextProps) {
+		const { location: { pathname } } = nextProps;
+		if (this.props.location.pathname !== pathname) {
+			if (
+				pathname === "/upload" ||
+				pathname === "/manage/clear" ||
+				pathname === "/manage/edit"
+			) {
+				this.handleGetDevice();
+			}
+		}
+	}
 
 	// Reset Device Info
 	resetCurrentDevice = () => {
@@ -76,8 +92,27 @@ class App extends Component {
 		this.msg[msgObj.type](msgObj.message, msgObj.isShort ? shortAlert : {});
 	};
 
+	// Get Device information
+	handleGetDevice = () => {
+		getDevice()
+			.then(data => {
+				const { barcodes, info, time } = data;
+				this.setState({
+					barcodes,
+					deviceTime: time,
+					deviceInfo: info
+				});
+			})
+			.catch(err => {
+				this.handleNotification({
+					type: "error",
+					isShort: true,
+					message: err.message
+				});
+			});
+	};
+
 	render() {
-		console.log(this.state);
 		return (
 			<div className="app">
 				<AlertContainer ref={a => (this.msg = a)} {...alertOptions} />
@@ -129,7 +164,13 @@ class App extends Component {
 						path="/manage/clear"
 						exact
 						render={props => {
-							return <Clear {...props} onClear={this.clearDevice} />;
+							return (
+								<Clear
+									{...props}
+									onClear={this.clearDevice}
+									numScans={this.state.barcodes.length}
+								/>
+							);
 						}}
 					/>
 				</main>
@@ -138,4 +179,4 @@ class App extends Component {
 	}
 }
 
-export default App;
+export default withRouter(App);

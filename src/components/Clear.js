@@ -55,7 +55,10 @@ class Clear extends Component {
 						<div className="center-section">
 							<div className="card-row">
 								<span className="card-info-title">Scans to be Deleted:</span>
-								<span className="card-info-answer">372 scans</span>
+								<span className="card-info-answer">
+									{this.props.numScans}{" "}
+									{String(this.props.numScans) !== "1" ? "Scans" : "Scan"}
+								</span>
 							</div>
 							<div className="card-row">
 								<span className="card-info-title">New Device Time:</span>

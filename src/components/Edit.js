@@ -107,7 +107,7 @@ class Edit extends Component {
 					id: k,
 					total: codesObject[k],
 					time: moment(k, "YYYY-MM-DDTHH").format("h:00 a, MMM Do"),
-					percent: Math.floor(codesObject[k] / this.props.barcodes * 100)
+					percent: Math.floor(codesObject[k] / this.props.barcodes.length * 100)
 				};
 			})
 			.sort((a, b) => {

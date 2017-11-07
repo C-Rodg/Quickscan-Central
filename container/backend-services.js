@@ -78,85 +78,90 @@ const getDeviceInformation = (com, event, responseName) => {
 
 	let barcodeData = new Uint8Array();
 
-	port.on("data", data => {
-		const offset = parseInt(data[data.length - 3]);
+	port.on("open", err => {
+		if (err) {
+			event.sender.send(responseName, generateError(err.message));
+			return false;
+		}
+		port.on("data", data => {
+			const offset = parseInt(data[data.length - 3]);
 
-		if (data.length === 12 && offset === 0) {
-			// Get Time
-			responseObject.time = parseGetTime(data);
-			port.write(getCodes);
-		} else if (data.length === 23 && offset === 0) {
-			// Device Wake
-			const info = parseDeviceInfo(data);
-			const newId = formatDeviceId(info.serial);
-			if (!newId) {
-				event.sender.send(responseName, generateError("Invalid Device Id.."));
-				return false;
-			}
+			if (data.length === 12 && offset === 0) {
+				// Get Time
+				responseObject.time = parseGetTime(data);
+				port.write(getCodes);
+			} else if (data.length === 23 && offset === 0) {
+				// Device Wake
+				const info = parseDeviceInfo(data);
+				const newId = formatDeviceId(info.serial);
+				if (!newId) {
+					event.sender.send(responseName, generateError("Invalid Device Id.."));
+					return false;
+				}
 
-			responseObject.info = { device: newId, firmware: info.sw_ver };
-			port.write(clock);
-		} else {
-			// Get Barcodes
-			barcodeData = opnUtils._appendBuffer(barcodeData, data);
-			if (offset === 0) {
-				let codes = barcodeData.slice(10, -3);
+				responseObject.info = { device: newId, firmware: info.sw_ver };
+				port.write(clock);
+			} else {
+				// Get Barcodes
+				barcodeData = opnUtils._appendBuffer(barcodeData, data);
+				if (offset === 0) {
+					let codes = barcodeData.slice(10, -3);
 
-				let length = null,
-					first = null,
-					scan = null,
-					symbology = null,
-					detectedScans = [];
+					let length = null,
+						first = null,
+						scan = null,
+						symbology = null,
+						detectedScans = [];
 
-				while (codes) {
-					length = parseInt(codes[0]);
-					first = codes.slice(1, length + 1);
-					barcodeData = codes.slice(length + 1);
-					if (first.byteLength !== 0) {
-						codes = codes.slice(length + 1);
-						symbology = opnUtils.symbologies[first[0] || "UNKNOWN"];
-						scan = Array.from(first.slice(1, first.length - 4))
-							.map(x => String.fromCharCode(x))
-							.join("");
-						const scanDateTime = opnUtils.extractPackedTimestamp(
-							first[first.length - 1],
-							first[first.length - 2],
-							first[first.length - 3],
-							first[first.length - 4]
-						);
-						detectedScans.push({
-							type: symbology,
-							data: scan,
-							time: scanDateTime
+					while (codes) {
+						length = parseInt(codes[0]);
+						first = codes.slice(1, length + 1);
+						barcodeData = codes.slice(length + 1);
+						if (first.byteLength !== 0) {
+							codes = codes.slice(length + 1);
+							symbology = opnUtils.symbologies[first[0] || "UNKNOWN"];
+							scan = Array.from(first.slice(1, first.length - 4))
+								.map(x => String.fromCharCode(x))
+								.join("");
+							const scanDateTime = opnUtils.extractPackedTimestamp(
+								first[first.length - 1],
+								first[first.length - 2],
+								first[first.length - 3],
+								first[first.length - 4]
+							);
+							detectedScans.push({
+								type: symbology,
+								data: scan,
+								time: scanDateTime
+							});
+						} else {
+							codes = false;
+						}
+					}
+					responseObject.barcodes = detectedScans;
+
+					if (port && port.isOpen) {
+						port.close(err => {
+							if (err) {
+								event.sender.send(responseName, generateError(err));
+								return false;
+							}
+							event.sender.send(responseName, responseObject);
 						});
 					} else {
-						codes = false;
+						event.sender.send(responseName, responseObject);
 					}
 				}
-				responseObject.barcodes = detectedScans;
-
-				if (port && port.isOpen) {
-					port.close(err => {
-						if (err) {
-							event.sender.send(responseName, generateError(err));
-							return false;
-						}
-						event.sender.send(responseName, responseObject);
-					});
-				} else {
-					event.sender.send(responseName, responseObject);
-				}
 			}
-		}
+		});
+		port.write(wake);
 	});
-
-	port.write(wake);
 };
 
 // Handle Data for Wake
 const parseDeviceInfo = data => {
-	const serial = data.slice(4, 12);
-	const sw_ver = data.slice(12, 20);
+	const serial = data.slice(4, 12).toString("hex");
+	const sw_ver = data.slice(12, 20).toString();
 	return {
 		serial,
 		sw_ver
