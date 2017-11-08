@@ -76,8 +76,22 @@ class App extends Component {
 
 	// Clear Device Confirmed
 	handleClearDevice = offset => {
+		let timeToSet;
+		if (offset >= 0) {
+			timeToSet = moment().add(offset, "h");
+		} else {
+			timeToSet = moment().subtract(Math.abs(offset), "h");
+		}
+		const resetTuple = [
+			timeToSet.second(),
+			timeToSet.minute(),
+			timeToSet.hour(),
+			timeToSet.date(),
+			timeToSet.month() + 1,
+			timeToSet.year() - 2000
+		];
 		this.msg.removeAll();
-		clearDevice(offset)
+		clearDevice(resetTuple)
 			.then(data => {
 				this.handleNotification({
 					message: `Device ${this.state.deviceInfo.device} initialized!`,

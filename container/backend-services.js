@@ -2,7 +2,6 @@
 const electron = require("electron");
 const { ipcMain } = electron;
 const Serialport = require("serialport");
-const moment = require("moment");
 const axios = require("axios");
 
 // Settings/Utilities
@@ -104,26 +103,7 @@ ipcMain.on("clear-device", (event, arg) => {
 			} else if (data.length === 5 && offset === 0) {
 				// Handle clear codes command and reset time
 
-				// Factor in offset
-				let timeToSet;
-				if (arg.offset >= 0) {
-					timeToSet = moment().add(arg.offset, "h");
-				} else {
-					timeToSet = moment().subtract(Math.abs(arg.offset), "h");
-				}
-
-				const resetTime = [
-					0x09,
-					0x02,
-					0x06,
-					timeToSet.second(),
-					timeToSet.minute(),
-					timeToSet.hour(),
-					timeToSet.date(),
-					timeToSet.month() + 1,
-					timeToSet.year() - 2000,
-					0x00
-				];
+				const resetTime = [0x09, 0x02, 0x06, ...arg.resetTuple, 0x00];
 
 				// Calculate CRC check for last two bytes
 				const SymbolClass = new opnUtils.SymbolCrc16();
