@@ -41,11 +41,13 @@ export const uploadDevice = scanObj => {
 	return new Promise((resolve, reject) => {
 		ipcRenderer.send("upload-device", scanObj);
 		ipcRenderer.once("upload-device-response", (event, arg) => {
-			console.log(arg);
 			if (arg.error) {
 				reject(arg);
-			} else {
+			}
+			if (arg.data && arg.status === 200 && arg.data.indexOf("Success") > -1) {
 				resolve(arg);
+			} else {
+				reject(arg);
 			}
 		});
 		setTimeout(reject, DEFAULT_TIMEOUT);

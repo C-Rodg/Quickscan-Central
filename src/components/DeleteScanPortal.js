@@ -13,7 +13,7 @@ const DeleteScanPortal = ({ onCancel, onConfirmDelete, scan }) => {
 						</div>
 						<div className="delete-content">
 							<div className="delete-id-title">Scan Data:</div>
-							<div className="delete-id">{scan.data}</div>
+							<div className="delete-id">{scan && scan.data}</div>
 						</div>
 					</div>
 					<div className="delete-actions portal-actions">

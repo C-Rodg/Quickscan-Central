@@ -34,7 +34,8 @@ class App extends Component {
 		deviceTime: {},
 		deviceInfo: {},
 		barcodes: [],
-		extraInfo: {}
+		extraInfo: {},
+		isLoading: false
 	};
 
 	// Get device info for selected routes
@@ -58,7 +59,8 @@ class App extends Component {
 			deviceTime: {},
 			deviceInfo: {},
 			barcodes: [],
-			extraInfo: {}
+			extraInfo: {},
+			isLoading: false
 		});
 	};
 
@@ -130,26 +132,30 @@ class App extends Component {
 			return false;
 		}
 
-		uploadDevice({
-			barcodes: this.state.barcodes,
-			deviceId: this.state.deviceInfo.device
-		})
-			.then(data => {
-				this.handleNotification({
-					message: "Successfully uploaded device!",
-					isShort: false,
-					type: "success"
-				});
-				this.props.history.push("/");
-				this.resetCurrentDevice();
+		this.setState({ isLoading: true }, () => {
+			uploadDevice({
+				barcodes: this.state.barcodes,
+				deviceId: this.state.deviceInfo.device
 			})
-			.catch(err => {
-				this.handleNotification({
-					message: "Unable to upload scans at this time..",
-					isShort: false,
-					type: "error"
+				.then(data => {
+					this.handleNotification({
+						message: `Successfully uploaded device ${this.state.deviceInfo
+							.device}!`,
+						isShort: false,
+						type: "success"
+					});
+					this.props.history.push("/");
+					this.resetCurrentDevice();
+				})
+				.catch(err => {
+					this.handleNotification({
+						message: "Unable to upload scans at this time..",
+						isShort: false,
+						type: "error"
+					});
+					this.setState({ isLoading: false });
 				});
-			});
+		});
 	};
 
 	// Notification system
@@ -279,6 +285,7 @@ class App extends Component {
 									onUpload={this.handleUploadDevice}
 									extraInfo={this.state.extraInfo}
 									deviceInfo={this.state.deviceInfo}
+									isLoading={this.state.isLoading}
 								/>
 							);
 						}}
@@ -289,7 +296,7 @@ class App extends Component {
 						exact
 						render={props => {
 							return this.state.isAuthenticated ? (
-								<Manage {...props} />
+								<Manage {...props} onLogout={this.logout} />
 							) : (
 								<Login {...props} onAuthenticate={this.authenticate} />
 							);
@@ -308,6 +315,7 @@ class App extends Component {
 									onAddScan={this.handleInsertScan}
 									onConfirmedDelete={this.handleRemoveScan}
 									onNotification={this.handleNotification}
+									isLoading={this.state.isLoading}
 								/>
 							);
 						}}

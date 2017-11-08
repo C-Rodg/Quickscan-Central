@@ -1,5 +1,5 @@
-.home-button {
+.logout-button {
 	position: fixed;
 	top: 25px;
-	left: 20px;
+	right: 20px;
 }

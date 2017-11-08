@@ -23,8 +23,8 @@ if (
 function createWindow() {
 	// Create the browser window.
 	mainWindow = new BrowserWindow({
-		width: 960,
-		height: 720,
+		width: 1100,
+		height: 6000,
 		show: false,
 		//frame: false,
 		//transparent: true,

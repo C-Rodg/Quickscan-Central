@@ -1,6 +1,7 @@
 import React from "react";
 
 import HomeButton from "./HomeButton";
+import Loading from "./Loading";
 import "../styles/upload.css";
 
 // Display unique scans
@@ -24,7 +25,14 @@ const getSessionScans = scans => {
 	}
 };
 
-const Upload = ({ onUpload, extraInfo, deviceInfo }) => {
+const Upload = ({ onUpload, extraInfo, deviceInfo, isLoading }) => {
+	if (isLoading) {
+		return (
+			<div className="upload container loading">
+				<Loading />
+			</div>
+		);
+	}
 	return (
 		<div className="upload container">
 			<div className="row">

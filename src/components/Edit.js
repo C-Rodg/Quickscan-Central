@@ -12,6 +12,7 @@ import Chart from "./Chart";
 import ScanListItem from "./ScanListItem";
 import AddScanPortal from "./AddScanPortal";
 import DeleteScanPortal from "./DeleteScanPortal";
+import Loading from "./Loading";
 
 class Edit extends Component {
 	state = {
@@ -24,7 +25,7 @@ class Edit extends Component {
 	// Modal's cancelled
 	handleCancelModal = () => {
 		this.setState({
-			isShowingAddPortal: false,
+			isShowingDeletePortal: false,
 			isShowingAddPortal: false,
 			editPosition: null
 		});
@@ -216,6 +217,14 @@ class Edit extends Component {
 	}
 
 	render() {
+		if (this.props.isLoading) {
+			return (
+				<div className="edit container loading">
+					<Loading />
+				</div>
+			);
+		}
+
 		return (
 			<div className="edit container">
 				<div className="row upload-button">

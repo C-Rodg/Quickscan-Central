@@ -5,6 +5,10 @@
 	width: 100%;
 }
 
+.edit.container.loading {
+	justify-content: center;
+}
+
 .edit .count-container {
 	margin-bottom: 5px;
 }
