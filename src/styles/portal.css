@@ -1,0 +1,99 @@
+.portal {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.8);
+	z-index: 101;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.portal .card {
+	min-width: 300px;
+}
+
+.portal .portal-body {
+	text-align: center;
+	padding: 15px 15px 5px 15px;
+}
+
+.portal-title {
+	font-weight: 500;
+	font-size: 1.2rem;
+	margin: 0 10px 10px 10px;
+}
+
+.portal .delete-id {
+	font-size: 1.5rem;
+	font-weight: 500;
+	margin-bottom: 20px;
+	margin-top: 3px;
+}
+
+.portal-actions {
+	display: flex;
+	border-top: 1px solid #e7e7e7;
+}
+
+.portal-action {
+	background-color: #fff;
+	transition: background-color 0.3s ease;
+	border-radius: 2px;
+	display: inline-block;
+	text-transform: uppercase;
+	font-size: 1.1rem;
+	font-weight: 500;
+	width: 50%;
+	text-align: center;
+	padding: 10px 0;
+	cursor: pointer;
+}
+
+.portal-action:hover {
+	background-color: #e7e7e7;
+}
+
+.portal-action:first-child {
+	border-right: 1px solid #e7e7e7;
+}
+
+.portal .add-content {
+	margin: 15px 0 25px 0;
+}
+
+.portal .time-controls {
+	display: inline-block;
+	border-radius: 2px;
+	border: 3px solid #e7e7e7;
+	margin-bottom: 15px;
+}
+
+.portal .time-control {
+	background-color: #fff;
+	color: #979797;
+	transition: all 0.3s ease;
+	display: inline-block;
+	cursor: pointer;
+	padding: 8px 10px;
+	min-width: 78px;
+	font-size: 1.1rem;
+	letter-spacing: 0.1em;
+	font-weight: 500;
+	user-select: none;
+}
+
+.portal .time-control:hover {
+	background-color: #e7e7e7;
+	color: #666;
+}
+
+.portal .time-control:first-child {
+	border-right: 3px solid #e7e7e7;
+}
+
+.portal .delete-id.clock-tick {
+	margin-bottom: 8px;
+}
