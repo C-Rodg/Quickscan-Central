@@ -133,3 +133,7 @@ main {
 	justify-content: center;
 	align-items: center;
 }
+
+.alert-controller div {
+	font-size: 12px !important;
+}

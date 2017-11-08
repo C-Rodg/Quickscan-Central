@@ -74,10 +74,11 @@ class App extends Component {
 
 	// Clear Device Confirmed
 	handleClearDevice = offset => {
+		this.msg.removeAll();
 		clearDevice(offset)
 			.then(data => {
 				this.handleNotification({
-					message: `Device ${this.state.info.device} initialized!`,
+					message: `Device ${this.state.deviceInfo.device} initialized!`,
 					isShort: false,
 					type: "success"
 				});
@@ -88,7 +89,8 @@ class App extends Component {
 			.catch(err => {
 				console.log(err);
 				this.handleNotification({
-					message: `Unable to initialize device ${this.state.info.device}..`,
+					message: `Unable to initialize device ${this.state.deviceInfo
+						.device}..`,
 					isShort: false,
 					type: "error"
 				});
@@ -97,6 +99,7 @@ class App extends Component {
 
 	// Upload Device
 	handleUploadDevice = () => {
+		this.msg.removeAll();
 		// Invalid Device ID
 		if (!this.state.deviceInfo.device) {
 			this.handleNotification({
@@ -253,7 +256,9 @@ class App extends Component {
 		console.log(this.props);
 		return (
 			<div className="app">
-				<AlertContainer ref={a => (this.msg = a)} {...alertOptions} />
+				<div className="alert-controller">
+					<AlertContainer ref={a => (this.msg = a)} {...alertOptions} />
+				</div>
 				<Title />
 				<main>
 					<Route
