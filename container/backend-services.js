@@ -9,6 +9,8 @@ const axios = require("axios");
 const opnUtils = require("./opn-utils");
 const { generateSOAP } = require("./upload-utils");
 
+let currentCom = null;
+
 // Event - get-device
 ipcMain.on("get-device", (event, arg) => {
 	Serialport.list((err, ports) => {
@@ -42,13 +44,98 @@ ipcMain.on("get-device", (event, arg) => {
 			return false;
 		}
 
+		// Set Global Current ComName
+		currentCom = selectedPort.comName;
+
 		getDeviceInformation(selectedPort.comName, event, "get-device-response");
+	});
+});
+
+// Event - clear device
+ipcMain.on("clear-device", (event, arg) => {
+	// OPN Commands
+	const wake = new Buffer([0x01, 0x02, 0x00, 0x9f, 0xde]); // Wake up device
+	const clearCodes = new Buffer([0x02, 0x02, 0x00, 0x9f, 0x2e]); // Clear existing codes
+
+	let port = new Serialport(currentCom, {
+		baudRate: 9600,
+		dataBits: 8,
+		parity: "odd",
+		stopBits: 1,
+		parser: Serialport.parsers.raw
+	});
+
+	port.on("open", err => {
+		if (err) {
+			event.sender.send("clear-device-response", generateError(err.message));
+			return false;
+		}
+
+		port.on("data", data => {
+			const offset = parseInt(data[data.length - 3]);
+
+			if (data.length === 23 && offset === 0) {
+				// Handle wake command and send clear codes command
+				port.write(clearCodes);
+			} else if (data.length === 5 && offset === 0) {
+				// Handle clear codes command and reset time
+
+				// Factor in offset
+				let timeToSet;
+				if (arg.offset >= 0) {
+					timeToSet = moment().add(arg.offset, "h");
+				} else {
+					timeToSet = moment().subtract(Math.abs(arg.offset), "h");
+				}
+
+				const resetTime = [
+					0x09,
+					0x02,
+					0x06,
+					timeToSet.second(),
+					timeToSet.minute(),
+					timeToSet.hour(),
+					timeToSet.date(),
+					timeToSet.month() + 1,
+					timeToSet.year() - 2000,
+					0x00
+				];
+
+				// Calculate CRC check for last two bytes
+				const SymbolClass = new opnUtils.SymbolCrc16();
+				const crcCheck = SymbolClass.CalcSymbolCrc16(
+					resetTime,
+					resetTime.length
+				);
+				resetTime.push(crcCheck.HiByte, crcCheck.LoByte);
+
+				// Create buffer and write
+				const setTimeBuffer = new Buffer(resetTime);
+				port.write(setTimeBuffer);
+			} else if (data.length === 12 && offset === 0) {
+				if (port && port.isOpen) {
+					port.close(err => {
+						if (err) {
+							event.sender.send(
+								"clear-device-response",
+								generateError(err.message)
+							);
+						}
+						event.sender.send("clear-device-response", { success: true });
+					});
+				} else {
+					event.sender.send("clear-device-response", { success: true });
+				}
+			}
+		});
+
+		port.write(wake);
 	});
 });
 
 // Get Device info
 const getDeviceInformation = (com, event, responseName) => {
-	// Basic commands
+	// OPN Commands
 	const wake = new Buffer([0x01, 0x02, 0x00, 0x9f, 0xde]); // Wake up device
 	const clock = new Buffer([0x0a, 0x02, 0x00, 0x5d, 0xaf]); // Get Time
 	const getCodes = new Buffer([0x07, 0x02, 0x00, 0x9e, 0x3e]); // Get Barcodes

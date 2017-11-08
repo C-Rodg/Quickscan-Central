@@ -22,9 +22,9 @@ export const getDevice = () => {
 };
 
 // Clear the device with new time
-export const clearDevice = timeTuple => {
+export const clearDevice = offset => {
 	return new Promise((resolve, reject) => {
-		ipcRenderer.send("clear-device", timeTuple);
+		ipcRenderer.send("clear-device", { offset });
 		ipcRenderer.once("clear-device-response", (event, arg) => {
 			if (arg.error) {
 				reject(arg);

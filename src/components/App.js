@@ -73,28 +73,22 @@ class App extends Component {
 	};
 
 	// Clear Device Confirmed
-	handleClearDevice = resetTime => {
-		const timeTuple = [
-			resetTime.second(),
-			resetTime.minute(),
-			resetTime.hour(),
-			resetTime.date(),
-			resetTime.month() + 1,
-			resetTime.year() - 2000
-		];
-		console.log(timeTuple);
-		clearDevice(timeTupe)
+	handleClearDevice = offset => {
+		clearDevice(offset)
 			.then(data => {
-				// TODO-Navigate home and clear state
 				this.handleNotification({
-					message: "Device initialized!",
+					message: `Device ${this.state.info.device} initialized!`,
 					isShort: false,
 					type: "success"
 				});
+
+				this.props.history.push("/");
+				this.resetCurrentDevice();
 			})
 			.catch(err => {
+				console.log(err);
 				this.handleNotification({
-					message: "Unable to initialize device..",
+					message: `Unable to initialize device ${this.state.info.device}..`,
 					isShort: false,
 					type: "error"
 				});
@@ -256,6 +250,7 @@ class App extends Component {
 	};
 
 	render() {
+		console.log(this.props);
 		return (
 			<div className="app">
 				<AlertContainer ref={a => (this.msg = a)} {...alertOptions} />

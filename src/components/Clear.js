@@ -86,7 +86,7 @@ class Clear extends Component {
 				<div className="row">
 					<div
 						className="action-button clear-action-button"
-						onClick={() => this.props.onClear(this.state.currentDate)}
+						onClick={() => this.props.onClear(this.state.offset)}
 					>
 						Clear Device
 					</div>
