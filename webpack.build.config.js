@@ -47,7 +47,10 @@ module.exports = {
 	},
 	target: "electron-renderer",
 	plugins: [
-		new HtmlWebpackPlugin(),
+		new HtmlWebpackPlugin({
+			favicon: "./src/static/favicon.ico",
+			title: "Quickscan Central"
+		}),
 		new ExtractTextPlugin("bundle.css"),
 		new webpack.DefinePlugin({
 			"process.env.NODE_ENV": JSON.stringify("production")
