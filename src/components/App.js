@@ -22,7 +22,11 @@ import {
 } from "../utils/dateFormats";
 
 // Services
-import { getDevice } from "../services/container-services";
+import {
+	getDevice,
+	clearDevice,
+	uploadData
+} from "../services/container-services";
 
 class App extends Component {
 	state = {
@@ -69,7 +73,7 @@ class App extends Component {
 	};
 
 	// Clear Device Confirmed
-	clearDevice = resetTime => {
+	handleClearDevice = resetTime => {
 		const timeTuple = [
 			resetTime.second(),
 			resetTime.minute(),
@@ -79,20 +83,75 @@ class App extends Component {
 			resetTime.year() - 2000
 		];
 		console.log(timeTuple);
-		this.handleNotification({
-			message: "Device initialized!",
-			isShort: false,
-			type: "success"
-		});
+		clearDevice(timeTupe)
+			.then(data => {
+				// TODO-Navigate home and clear state
+				this.handleNotification({
+					message: "Device initialized!",
+					isShort: false,
+					type: "success"
+				});
+			})
+			.catch(err => {
+				this.handleNotification({
+					message: "Unable to initialize device..",
+					isShort: false,
+					type: "error"
+				});
+			});
 	};
 
 	// Upload Device
-	uploadDevice = () => {
-		this.handleNotification({
-			message: "Successfully uploaded device!",
-			isShort: false,
-			type: "success"
-		});
+	handleUploadDevice = () => {
+		// Invalid Device ID
+		if (!this.state.deviceInfo.device) {
+			this.handleNotification({
+				message: "Invalid device ID...",
+				type: "error",
+				isShort: true
+			});
+			return false;
+		}
+
+		// No data
+		if (!this.state.barcodes.length) {
+			this.handleNotification({
+				message: "No data to upload...",
+				type: "error",
+				isShort: true
+			});
+			return false;
+		}
+
+		// No internet
+		if (!window.navigator.onLine) {
+			this.handleNotification({
+				message: "No internet connection...",
+				type: "error",
+				isShort: true
+			});
+			return false;
+		}
+
+		uploadDevice({
+			barcodes: this.state.barcodes,
+			deviceId: this.state.deviceInfo.device
+		})
+			.then(data => {
+				// TODO - navigate back to home and reset state..
+				this.handleNotification({
+					message: "Successfully uploaded device!",
+					isShort: false,
+					type: "success"
+				});
+			})
+			.catch(err => {
+				this.handleNotification({
+					message: "Unable to upload scans at this time..",
+					isShort: false,
+					type: "error"
+				});
+			});
 	};
 
 	// Notification system
@@ -217,7 +276,7 @@ class App extends Component {
 							return (
 								<Upload
 									{...props}
-									onUpload={this.uploadDevice}
+									onUpload={this.handleUploadDevice}
 									extraInfo={this.state.extraInfo}
 									deviceInfo={this.state.deviceInfo}
 								/>
@@ -244,7 +303,7 @@ class App extends Component {
 							return (
 								<Edit
 									{...props}
-									onUpload={this.uploadDevice}
+									onUpload={this.handleUploadDevice}
 									barcodes={this.state.barcodes}
 									onAddScan={this.handleInsertScan}
 									onConfirmedDelete={this.handleRemoveScan}
@@ -261,7 +320,7 @@ class App extends Component {
 							return (
 								<Clear
 									{...props}
-									onClear={this.clearDevice}
+									onClear={this.handleClearDevice}
 									numScans={this.state.barcodes.length}
 								/>
 							);
