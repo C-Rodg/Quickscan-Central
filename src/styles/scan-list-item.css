@@ -23,6 +23,16 @@
 	border-top: 0;
 }
 
+.scan-list-item:first-child .scan-item-content {
+	border-top-left-radius: 7px;
+	border-top-right-radius: 7px;
+}
+
+.scan-list-item:last-child .scan-item-content {
+	border-bottom-left-radius: 7px;
+	border-bottom-right-radius: 7px;
+}
+
 .scan-list-item .item-id {
 	font-weight: 500;
 	font-size: 1.1rem;

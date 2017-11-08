@@ -75,6 +75,28 @@ main {
 	padding-right: 10px;
 }
 
+.icon-card-hover {
+	background-color: #fff;
+	transition: background-color 0.3s ease-in-out;
+	position: absolute;
+	top: 4px;
+	right: 4px;
+	cursor: pointer;
+	line-height: 28px;
+	width: 28px;
+	text-align: center;
+	height: 28px;
+	border-radius: 50%;
+}
+
+.icon-card-hover:hover {
+	background-color: #e7e7e7;
+}
+
+.icon-card-hover i {
+	line-height: 28px;
+}
+
 .action-button {
 	font-weight: 500;
 	color: #fff;
@@ -90,6 +112,7 @@ main {
 	background-color: #578c88;
 	transition: background-color 0.3s ease;
 	border: 5px solid #6ea9a2;
+	text-align: center;
 }
 
 .upload-action-button:hover {

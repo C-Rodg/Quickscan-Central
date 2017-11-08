@@ -15,9 +15,10 @@ const getUniqueText = scans => {
 // Display Session Scans
 const getSessionScans = scans => {
 	if (scans && scans.size) {
-		return "Yes - " + scans.size !== 1
-			? `${scans.size} scans`
-			: `${scans.size} scan`;
+		return (
+			"Yes - " +
+			(scans.size !== 1 ? `${scans.size} scans` : `${scans.size} scan`)
+		);
 	} else {
 		return "No";
 	}

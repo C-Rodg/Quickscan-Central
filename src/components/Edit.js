@@ -24,7 +24,15 @@ class Edit extends Component {
 		if (this.props.barcodes.length === 0) {
 			return (
 				<div className="no-scan-content scan-count">
-					No Scans...<i className="material-icons scans-add">
+					No Scans...<i
+						className="material-icons scans-add"
+						onClick={() =>
+							this.setState({
+								openPosition: null,
+								editPosition: 0,
+								isShowingAddPortal: true
+							})}
+					>
 						add_circle_outline
 					</i>
 				</div>
@@ -123,15 +131,15 @@ class Edit extends Component {
 					return 0;
 				}
 			});
-		return <Chart title="Scan Title Summary" data={barcodeData} />;
+		return <Chart title="Scan Time Summary" data={barcodeData} />;
 	}
 
 	// Get Scan Data and chart
 	renderScanContent() {
 		return (
 			<div className="data-container">
-				<div className="data-scans">{this.renderScanList()}</div>
-				<div className="data-chart">{this.renderScanChart()}</div>
+				<div className="data-scans card">{this.renderScanList()}</div>
+				<div className="data-chart card">{this.renderScanChart()}</div>
 			</div>
 		);
 	}
@@ -139,18 +147,21 @@ class Edit extends Component {
 	render() {
 		return (
 			<div className="edit container">
+				<div className="row upload-button">
+					{this.props.barcodes.length > 0 && (
+						<div
+							className="action-button upload-action-button"
+							onClick={this.props.onUpload}
+						>
+							Upload Now!
+						</div>
+					)}
+				</div>
 				<div className="row count-container">{this.renderScanCount()}</div>
 				<div className="row">
 					{this.props.barcodes.length > 0 && this.renderScanContent()}
 				</div>
-				<div className="row">
-					<div
-						className="action-button upload-action-button"
-						onClick={this.props.onUpload}
-					>
-						Upload Now!
-					</div>
-				</div>
+
 				<HomeButton />
 			</div>
 		);
