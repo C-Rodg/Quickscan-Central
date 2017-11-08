@@ -37,10 +37,11 @@ export const clearDevice = offset => {
 };
 
 // Upload barcode data
-export const uploadData = scanObj => {
+export const uploadDevice = scanObj => {
 	return new Promise((resolve, reject) => {
 		ipcRenderer.send("upload-device", scanObj);
 		ipcRenderer.once("upload-device-response", (event, arg) => {
+			console.log(arg);
 			if (arg.error) {
 				reject(arg);
 			} else {

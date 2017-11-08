@@ -51,6 +51,30 @@ ipcMain.on("get-device", (event, arg) => {
 	});
 });
 
+// Event - upload device
+ipcMain.on("upload-device", (event, arg) => {
+	const postData = generateSOAP(arg.deviceId, arg.barcodes);
+
+	axios({
+		method: "post",
+		url:
+			"https://portal.validar.com/WebServices/V2/RemoteDataAcquirer/RemoteDataAcquirerService.asmx",
+		headers: {
+			"Content-Type": "text/xml; charset=utf-8",
+			SOAPAction:
+				"https://portal.validar.com/PortalWebServices/V2/RemoteDataAcquirer/UploadRemoteData",
+			Host: "portal.validar.com"
+		},
+		data: postData
+	})
+		.then(resp => {
+			event.sender.send("upload-device-response", resp);
+		})
+		.catch(err => {
+			event.sender.send("upload-device-response", err);
+		});
+});
+
 // Event - clear device
 ipcMain.on("clear-device", (event, arg) => {
 	// OPN Commands

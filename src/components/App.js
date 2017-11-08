@@ -25,7 +25,7 @@ import {
 import {
 	getDevice,
 	clearDevice,
-	uploadData
+	uploadDevice
 } from "../services/container-services";
 
 class App extends Component {
@@ -135,12 +135,13 @@ class App extends Component {
 			deviceId: this.state.deviceInfo.device
 		})
 			.then(data => {
-				// TODO - navigate back to home and reset state..
 				this.handleNotification({
 					message: "Successfully uploaded device!",
 					isShort: false,
 					type: "success"
 				});
+				this.props.history.push("/");
+				this.resetCurrentDevice();
 			})
 			.catch(err => {
 				this.handleNotification({
@@ -253,7 +254,6 @@ class App extends Component {
 	};
 
 	render() {
-		console.log(this.props);
 		return (
 			<div className="app">
 				<div className="alert-controller">
