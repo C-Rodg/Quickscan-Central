@@ -10,6 +10,8 @@ import {
 import HomeButton from "./HomeButton";
 import Chart from "./Chart";
 import ScanListItem from "./ScanListItem";
+import AddScanPortal from "./AddScanPortal";
+import DeleteScanPortal from "./DeleteScanPortal";
 
 class Edit extends Component {
 	state = {
@@ -17,6 +19,66 @@ class Edit extends Component {
 		isShowingAddPortal: false,
 		editPosition: null,
 		openPosition: null
+	};
+
+	// Modal's cancelled
+	handleCancelModal = () => {
+		this.setState({
+			isShowingAddPortal: false,
+			isShowingAddPortal: false,
+			editPosition: null
+		});
+	};
+
+	// Scan Added
+	handleConfirmAdd = data => {
+		if (!data) {
+			// notify and close modal
+			this.setState({ isShowingAddPortal: false, editPosition: null }, () => {
+				this.props.onNotification({
+					type: "error",
+					message: "Unable to insert blank scan data..",
+					isShort: true
+				});
+			});
+
+			return false;
+		}
+		const scan = {
+			data,
+			time:
+				moment()
+					.utc()
+					.format(addDateFormat) + ".000Z",
+			type: "MANUAL"
+		};
+		// Add scan to 'App' component and close
+		this.props.onAddScan(this.state.editPosition, scan);
+		this.setState({ isShowingAddPortal: false, editPosition: null }, () => {
+			this.props.onNotification({
+				type: "success",
+				message: "New scan added!",
+				isShort: true
+			});
+		});
+	};
+
+	// Delete scan item confirmed
+	handleConfirmDelete = () => {
+		this.props.onConfirmedDelete(this.state.editPosition);
+		this.setState(
+			{
+				isShowingDeletePortal: false,
+				editPosition: null
+			},
+			() => {
+				this.props.onNotification({
+					type: "success",
+					message: "Successfully removed scan.",
+					isShort: true
+				});
+			}
+		);
 	};
 
 	// Get Scan Count header
@@ -43,14 +105,23 @@ class Edit extends Component {
 			<div className="scan-count">
 				{this.props.barcodes.length}{" "}
 				{this.props.barcodes.length !== 1 ? "Scans" : "Scan"}{" "}
-				<i className="material-icons scans-add">add_circle_outline</i>
+				<i
+					className="material-icons scans-add"
+					onClick={() =>
+						this.setState({
+							openPosition: null,
+							editPosition: -1,
+							isShowingAddPortal: true
+						})}
+				>
+					add_circle_outline
+				</i>
 			</div>
 		);
 	}
 
 	// Open/Close Action Buttons
 	openActionButtons = idx => {
-		console.log("opening..");
 		if (this.state.openPosition === idx) {
 			this.setState({ openPosition: null });
 		} else {
@@ -162,6 +233,20 @@ class Edit extends Component {
 					{this.props.barcodes.length > 0 && this.renderScanContent()}
 				</div>
 
+				{this.state.isShowingAddPortal && (
+					<AddScanPortal
+						onCancel={this.handleCancelModal}
+						onConfirmAdd={this.handleConfirmAdd}
+					/>
+				)}
+
+				{this.state.isShowingDeletePortal && (
+					<DeleteScanPortal
+						scan={this.props.barcodes[this.state.editPosition]}
+						onCancel={this.handleCancelModal}
+						onConfirmDelete={this.handleConfirmDelete}
+					/>
+				)}
 				<HomeButton />
 			</div>
 		);

@@ -13,17 +13,19 @@
 
 .portal .card {
 	min-width: 300px;
+	padding: 0;
 }
 
 .portal .portal-body {
 	text-align: center;
-	padding: 15px 15px 5px 15px;
+	padding: 20px 20px 5px 20px;
 }
 
 .portal-title {
 	font-weight: 500;
 	font-size: 1.2rem;
-	margin: 0 10px 10px 10px;
+	line-height: 1.5;
+	margin: 0 10px 20px 10px;
 }
 
 .portal .delete-id {
@@ -58,6 +60,11 @@
 
 .portal-action:first-child {
 	border-right: 1px solid #e7e7e7;
+	border-bottom-left-radius: 7px;
+}
+
+.portal-action:last-child {
+	border-bottom-right-radius: 7px;
 }
 
 .portal .add-content {

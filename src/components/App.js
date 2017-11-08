@@ -172,6 +172,30 @@ class App extends Component {
 		};
 	};
 
+	// Insert scan
+	handleInsertScan = (idx, scan) => {
+		if (idx === -1) {
+			this.setState({
+				barcodes: [scan, ...this.state.barcodes]
+			});
+			return false;
+		}
+		const firstBarcodes = this.state.barcodes.slice(0, idx + 1);
+		const lastBarcodes = this.state.barcodes.slice(idx + 1);
+		this.setState({
+			barcodes: [...firstBarcodes, scan, ...lastBarcodes]
+		});
+	};
+
+	// Remove Scan
+	handleRemoveScan = idx => {
+		this.setState({
+			barcodes: this.state.barcodes.filter((code, currentIdx) => {
+				return currentIdx !== idx;
+			})
+		});
+	};
+
 	render() {
 		return (
 			<div className="app">
@@ -222,6 +246,9 @@ class App extends Component {
 									{...props}
 									onUpload={this.uploadDevice}
 									barcodes={this.state.barcodes}
+									onAddScan={this.handleInsertScan}
+									onConfirmedDelete={this.handleRemoveScan}
+									onNotification={this.handleNotification}
 								/>
 							);
 						}}
