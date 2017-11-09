@@ -1,11 +1,11 @@
 const electronInstaller = require("electron-winstaller");
+const path = require("path");
 
 resultPromise = electronInstaller.createWindowsInstaller({
 	appDirectory: "./builds/QuickscanCentral",
 	outputDirectory: "./builds/QuickscanCentralInstaller",
 	exe: "QuickscanCentral.exe",
-	version: "1.0.1",
-	setupIcon: "./src/static/favicon.ico"
+	version: "1.0.1"
 });
 
 resultPromise.then(

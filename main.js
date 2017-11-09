@@ -106,7 +106,8 @@ function createWindow() {
 		closable: true,
 		fullscreenable: true,
 		title: "Quickscan Central",
-		frame: true
+		frame: true,
+		icon: path.join(__dirname, "src", "static", "favicon.ico")
 		//backgroundColor: '#00796b'
 	});
 
