@@ -20,6 +20,7 @@ ipcMain.on("get-device", (event, arg) => {
 			);
 			return false;
 		}
+		let selectedPort;
 
 		// Connect to first OPN device
 		for (let i = 0, j = ports.length; i < j; i++) {

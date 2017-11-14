@@ -5,7 +5,9 @@ resultPromise = electronInstaller.createWindowsInstaller({
 	appDirectory: "./builds/QuickscanCentral",
 	outputDirectory: "./builds/QuickscanCentralInstaller",
 	exe: "QuickscanCentral.exe",
-	version: "1.0.1"
+	version: "1.0.1",
+	setupExe: "QuickscanCentralInstaller.exe"
+	//setupIcon: path.join("./", "src", "static", "icons", "win", "icon.ico")
 });
 
 resultPromise.then(

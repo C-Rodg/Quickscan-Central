@@ -2,28 +2,28 @@
 	"name": "QuickscanCentral",
 	"version": "1.0.1",
 	"productName": "Quickscan Central",
-	"description": "An Electron wrapper application for interacting with Opticon's OPN-2001 devices.",
+	"description":
+		"An Electron wrapper application for interacting with Opticon's OPN-2001 devices.",
 	"main": "main.js",
 	"scripts": {
 		"start": "electron .",
 		"install": "electron-rebuild",
-		"prod": "webpack --config webpack.build.config.js && electron --noDevServer .",
-		"dev": "webpack-dev-server --hot --host 0.0.0.0 --config=./webpack.dev.config.js",
+		"prod":
+			"webpack --config webpack.build.config.js && electron --noDevServer .",
+		"dev":
+			"webpack-dev-server --hot --host 0.0.0.0 --config=./webpack.dev.config.js",
 		"build": "webpack --config webpack.build.config.js",
 		"package": "webpack --config webpack.build.config.js",
-		"postpackage": "electron-packager ./ QuickscanCentral --out=./builds --asar --app-version=1.0.0",
+		"postpackage":
+			"electron-packager ./ QuickscanCentral --out=./builds --asar --app-version=1.0.0 --icon=src/static/icons/win/icon.ico --prune=true",
 		"complete": "node installer.js"
 	},
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/C-Rodg/Quickscan-Central.git"
 	},
-	"keywords": [
-		"Electron",
-		"Opticon",
-		"OPN-2001",
-		"scan"
-	],
+	"nodejs": "8.7.0",
+	"keywords": ["Electron", "Opticon", "OPN-2001", "scan"],
 	"author": "C-Rodg",
 	"license": "MIT",
 	"devDependencies": {
