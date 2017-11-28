@@ -11,7 +11,7 @@ const Home = () => {
 				Please ensure a Quickscan device is connected.
 			</div>
 			<div className="home-button-container center-flex">
-				<RouteButton icon="file_upload" iconText="Upload" navTo="/upload" />
+				<RouteButton icon="file_upload" iconText="Confirm" navTo="/upload" />
 				<RouteButton
 					icon="settings"
 					iconText="Manage"

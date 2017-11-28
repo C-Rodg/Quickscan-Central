@@ -22,7 +22,9 @@ const ScanListItem = ({
 				>
 					<i className="material-icons">more_horiz</i>
 				</div>
-				<div className="item-id">{scanId}</div>
+				<div className="item-id">
+					{!isScanCode ? scanId : `SESSION:  ${scanId}`}
+				</div>
 				<div className="item-time">{scanTime}</div>
 			</div>
 			<div className={["scan-item-actions", isOpen ? "is-open" : ""].join(" ")}>

@@ -16,7 +16,16 @@
 }
 
 .scan-list-item.is-scan-code {
-	border-top: 2px solid #333;
+	border-top: 3px solid #333;
+}
+
+.scan-list-item.is-scan-code .item-id {
+	font-weight: 600;
+	color: #18504b;
+}
+
+.scan-list-item.is-scan-code .item-time {
+	color: #22655f;
 }
 
 .scan-list-item:first-child {
